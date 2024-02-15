@@ -29,10 +29,10 @@ public class PackageReader {
 
         if (isConnectPackage(bytesRead, buffer)) {
             socket.setSoTimeout(0);
-            System.out.println("Received MQTT CONNECT message from client");
+            logger.info("Received MQTT CONNECT message from client");
             connectPackageSent.put(socket.getInetAddress(), true);
             sendConnackToClient(outputStream);
-            System.out.println("Sent MQTT CONNACK message to client");
+            logger.info("Sent MQTT CONNACK message to client");
             return true;
         }
 
@@ -109,7 +109,7 @@ public class PackageReader {
         }
 
         if (isDisconnectPackage(bytesRead, buffer)) {
-            System.out.println("Received MQTT DISCONNECT message from client");
+            logger.info("Received MQTT DISCONNECT message from client");
             connectPackageSent.remove(client);
             return true;
         }

@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClientHandler {
+    private static final Logger logger = Logger.getLogger(ClientHandler.class.getName());
     private final List<Socket> clients;
     private final PackageReader packageReader;
 
@@ -19,7 +22,7 @@ public class ClientHandler {
     public void handleConnection(Socket clientSocket) {
         try {
             if (packageReader.isValidConnection(clientSocket)) {
-                System.out.println("New client: " + clientSocket.getInetAddress().getHostName());
+                logger.info("New client: " + clientSocket.getInetAddress().getHostName());
                 clients.add(clientSocket);
             } else {
                 clientSocket.close();
@@ -32,8 +35,8 @@ public class ClientHandler {
                 }
             }
             removeDisconnectedClients();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, e.getMessage(), e);
         }
     }
 
@@ -43,7 +46,7 @@ public class ClientHandler {
             while (iterator.hasNext()) {
                 Socket client = iterator.next();
                 if (client.isClosed()) {
-                    System.out.println("Client disconnected: " + client.getInetAddress().getHostName());
+                    logger.info("Client disconnected: " + client.getInetAddress().getHostName());
                     iterator.remove();
                 }
             }
@@ -53,5 +56,4 @@ public class ClientHandler {
     public List<Socket> getClients() {
         return clients;
     }
-
 }

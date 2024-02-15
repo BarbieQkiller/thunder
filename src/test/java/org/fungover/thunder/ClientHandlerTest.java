@@ -10,8 +10,11 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -71,4 +74,20 @@ class ClientHandlerTest {
 
         assertEquals(Collections.singletonList(socket2), clientHandler.getClients());
     }
+    @Test
+    @DisplayName("Should log using java util logging")
+    void shouldLogUsingJavaUtilLogging() throws IOException{
+        Logger logger = Logger.getLogger("");
+        SpyLogHandler spyLogHandler = new SpyLogHandler();
+        logger.addHandler(spyLogHandler);
+
+        clientHandler.handleConnection(null);
+
+        assertNotNull(spyLogHandler.getLastRecord());
+        assertEquals(Level.WARNING, spyLogHandler.getLastRecord().getLevel());
+        assertEquals("Cannot invoke \"java.net.Socket.getInetAddress()\" because \"socket\" is null", spyLogHandler.getLastRecord().getMessage());
+
+        logger.removeHandler(spyLogHandler);
+    }
+
 }

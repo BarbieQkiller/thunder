@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Main {
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
 
     private static final Logger logger = Logger.getLogger(Main.class.getName());
 
@@ -14,7 +15,7 @@ public class Main {
             server = new Server();
             server.start();
         } catch (IOException | NullPointerException e) {
-            logger.log(Level.SEVERE, "Server not able to start", e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
